@@ -18,15 +18,6 @@ def get_product_by_id(id: int):
     
     return jsonify(product), 200
 
-@product_bp.route("/<name>", methods=["GET"])
-def get_product_by_name(name: str):
-    product = ProductService.get_product_by_name(name)
-
-    if product is None:
-        return jsonify({"error": f"No product found for name '{name}'."}), 404
-    
-    return jsonify(product), 200
-
 @product_bp.route("/", methods=["POST"])
 def insert_product():
     data = request.get_json()
