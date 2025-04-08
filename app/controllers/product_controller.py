@@ -7,26 +7,23 @@ product_bp = Blueprint("product", __name__, url_prefix="/products")
 def get_products():
     products = ProductService.get_products()
     
-    if not products:
-        return jsonify({"error": "No products found."}), 404
-    
     return jsonify(products), 200
 
-@product_bp.route("/id=<int:id>", methods=["GET"])
+@product_bp.route("/<int:id>", methods=["GET"])
 def get_product_by_id(id: int):
     product = ProductService.get_product_by_id(id)
 
     if product is None:
-        return jsonify({"error": "No product found."}), 404
+        return jsonify({"error": f"No product found for id {id}."}), 404
     
     return jsonify(product), 200
 
-@product_bp.route("/name=<name>", methods=["GET"])
+@product_bp.route("/<name>", methods=["GET"])
 def get_product_by_name(name: str):
     product = ProductService.get_product_by_name(name)
 
     if product is None:
-        return jsonify({"error": "No product found haha."}), 404
+        return jsonify({"error": f"No product found for name '{name}'."}), 404
     
     return jsonify(product), 200
 
