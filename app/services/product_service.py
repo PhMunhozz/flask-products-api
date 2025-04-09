@@ -3,8 +3,8 @@ from app.repositories.product_repository import ProductRepository
 class ProductService:
 
     @staticmethod
-    def get_products(name=None, price=None):
-        products = ProductRepository.get_products(name, price)
+    def get_products(name=None, category=None, barcode=None, price=None):
+        products = ProductRepository.get_products(name, category, barcode, price)
         return [product.to_dict() for product in products]
     
     @staticmethod
@@ -13,10 +13,10 @@ class ProductService:
         return product.to_dict() if product else None
     
     @staticmethod
-    def insert_product(name: str, price: float):
+    def insert_product(name: str, category: str, barcode: str, price: float):
 
         if float(price) <= 0:
             raise ValueError("Price must be over 0.00.")
 
-        product = ProductRepository.insert_product(name, price)
+        product = ProductRepository.insert_product(name, category, barcode, price)
         return product.to_dict()
