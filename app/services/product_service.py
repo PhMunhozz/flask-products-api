@@ -13,11 +13,6 @@ class ProductService:
         return product.to_dict() if product else None
     
     @staticmethod
-    def get_product_by_name(name: str):
-        product = ProductRepository.get_product_by_name(name)
-        return product.to_dict() if product else None
-    
-    @staticmethod
     def insert_product(name: str, price: float):
 
         if float(price) <= 0:

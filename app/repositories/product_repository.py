@@ -13,13 +13,6 @@ class ProductRepository:
         return product
     
     @staticmethod
-    def get_product_by_name(name: str):
-        for _, product in ProductRepository.products.items():
-            if product.name == name:
-                return product
-        return None
-    
-    @staticmethod
     def insert_product(name: str, price: float):
         id = len(ProductRepository.products) + 1
         product = Product(id, name, price)
