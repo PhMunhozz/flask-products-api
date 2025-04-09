@@ -5,7 +5,10 @@ product_bp = Blueprint("product", __name__, url_prefix="/products")
 
 @product_bp.route("/", methods=["GET"])
 def get_products():
-    products = ProductService.get_products()
+    name = request.args.get('name')
+    price = request.args.get('price')
+
+    products = ProductService.get_products(name, price)
     
     return jsonify(products), 200
 

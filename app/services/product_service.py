@@ -3,8 +3,8 @@ from app.repositories.product_repository import ProductRepository
 class ProductService:
 
     @staticmethod
-    def get_products():
-        products = ProductRepository.get_products()
+    def get_products(name=None, price=None):
+        products = ProductRepository.get_products(name, price)
         return [product.to_dict() for product in products]
     
     @staticmethod
