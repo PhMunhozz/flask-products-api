@@ -1,4 +1,5 @@
 from app.models.product_model import Product
+from app.exceptions.product_exceptions import ProductNotFoundError, DatabaseError
 
 class ProductRepository:
     products = {}
@@ -22,8 +23,16 @@ class ProductRepository:
     
     @staticmethod
     def get_product_by_id(id: int):
-        product = ProductRepository.products.get(id)
-        return product
+        try:
+            product = ProductRepository.products.get(id)
+
+            if product is None:
+                raise ProductNotFoundError(id)
+            
+            return product
+        
+        except DatabaseError:
+            raise
     
     @staticmethod
     def insert_product(name: str, category: str, barcode: str, price: float):

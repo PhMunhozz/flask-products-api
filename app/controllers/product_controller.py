@@ -1,6 +1,8 @@
 from flask import Blueprint, request, jsonify
-from werkzeug.exceptions import BadRequest
 from app.services.product_service import ProductService
+from app.exceptions.product_exceptions import ProductNotFoundError, ValidationError, DatabaseError
+from werkzeug.exceptions import BadRequest, NotFound, InternalServerError
+
 
 product_bp = Blueprint("product", __name__, url_prefix="/products")
 
@@ -15,14 +17,25 @@ def get_products():
     
     return jsonify(products), 200
 
-@product_bp.route("/<int:id>", methods=["GET"])
-def get_product_by_id(id: int):
-    product = ProductService.get_product_by_id(id)
 
-    if product is None:
-        return jsonify({"error": f"No product found for id {id}."}), 404
+@product_bp.route("/<id>", methods=["GET"])
+def get_product_by_id(id: int):
+    try:
+        product = ProductService.get_product_by_id(id)
+        return jsonify(product), 200
     
-    return jsonify(product), 200
+    except ProductNotFoundError as e:
+        return jsonify(error=str(e)), 404
+    
+    except ValidationError as e:
+        return jsonify(error=str(e)), 400
+    
+    except DatabaseError as e:
+        return jsonify(error=str(e)), 500
+    
+    except Exception as e:
+        return jsonify(error=str(e)), 500
+    
 
 @product_bp.route("/", methods=["POST"])
 def insert_product():
