@@ -1,4 +1,6 @@
 from app.repositories.product_repository import ProductRepository
+from app.exceptions.product_exceptions import ProductNotFoundError, ValidationError
+
 
 class ProductService:
 
@@ -9,9 +11,18 @@ class ProductService:
     
     @staticmethod
     def get_product_by_id(id: int):
-        product = ProductRepository.get_product_by_id(id)
-        return product.to_dict() if product else None
-    
+
+        try:
+            id = int(id)
+            if id <= 0:
+                raise ValidationError()
+
+            product = ProductRepository.get_product_by_id(id)
+            return product.to_dict()
+        
+        except ValueError:
+            raise ValidationError("ID must be a positive integer.")
+        
     @staticmethod
     def insert_product(name: str, category: str, barcode: str, price: float):
 
