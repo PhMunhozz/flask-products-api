@@ -21,14 +21,16 @@ class ProductService:
 
         try:
             id = int(id)
-            if id <= 0:
-                raise ValidationError()
-
-            product = ProductRepository.get_product_by_id(id)
-            return product.to_dict()
-        
         except ValueError:
             raise ValidationError("ID must be a positive integer.")
+        
+        if id <= 0:
+            raise ValidationError("ID must be a positive integer.")
+
+        product = ProductRepository.get_product_by_id(id)
+        return product.to_dict()
+        
+        
         
     @staticmethod
     def insert_product(name: str, category: str, barcode: str, price: float):
