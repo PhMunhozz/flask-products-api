@@ -8,14 +8,18 @@ product_bp = Blueprint("product", __name__, url_prefix="/products")
 
 @product_bp.route("/", methods=["GET"])
 def get_products():
-    name = request.args.get('name')
-    category = request.args.get('category')
-    barcode = request.args.get('barcode')
-    price = request.args.get('price')
+    try:
+        name = request.args.get('name')
+        category = request.args.get('category')
+        barcode = request.args.get('barcode')
+        price = request.args.get('price')
 
-    products = ProductService.get_products(name, category, barcode, price)
+        products = ProductService.get_products(name, category, barcode, price)
     
-    return jsonify(products), 200
+        return jsonify(products), 200
+    
+    except Exception as e:
+        return jsonify(error=str(e)), 500
 
 
 @product_bp.route("/<id>", methods=["GET"])

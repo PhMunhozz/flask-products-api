@@ -6,6 +6,13 @@ class ProductService:
 
     @staticmethod
     def get_products(name=None, category=None, barcode=None, price=None):
+
+        try:
+            if price is not None:
+                price = float(price)
+        except ValueError:
+            raise ValidationError("PRICE must be a valid number.")
+        
         products = ProductRepository.get_products(name, category, barcode, price)
         return [product.to_dict() for product in products]
     
