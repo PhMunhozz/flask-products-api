@@ -1,8 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app.services.product_service import ProductService
 from app.exceptions.product_exceptions import ProductNotFoundError, ValidationError, DatabaseError
-from werkzeug.exceptions import BadRequest, NotFound, InternalServerError
-
+from app.validators.input_validators import validate_required_fields, validate_positive_number
 
 product_bp = Blueprint("product", __name__, url_prefix="/products")
 
@@ -43,19 +42,34 @@ def get_product_by_id(id: int):
 
 @product_bp.route("/", methods=["POST"])
 def insert_product():
-    data = request.get_json()
-    name = data.get("name")
-    category = data.get("category")
-    barcode = data.get("barcode")
-    price = data.get("price")
-
-    if not name or not category or not barcode or not price:
-        raise BadRequest("Product must have 'name', 'category', 'barcode' and 'price'.")
     
-    try:
-        price = float(price)
-    except ValueError:
-        raise BadRequest("'Price' must be a valid number.")
+    required_fields = ['name', 'category', 'barcode', 'price']
 
-    product = ProductService.insert_product(name, price, category, barcode)
-    return jsonify(product), 201
+    try:
+        data = request.get_json()
+        
+        if not data:
+            raise ValidationError("Invalid or missing JSON in request body.")
+        
+        # Required fields validation
+        validate_required_fields(data, required_fields)
+        # Price validation
+        validate_positive_number(data.get('price'), 'price')
+        
+        product = ProductService.insert_product(
+            data.get('name'),
+            data.get('category'),
+            data.get('barcode'),
+            data.get('price')
+        )
+        
+        return jsonify(product), 201
+    
+    except ValidationError as e:
+        return jsonify(error=str(e)), 400
+    
+    except DatabaseError as e:
+        return jsonify(error=str(e)), 400
+    
+    except Exception as e:
+        return jsonify(error=str(e)), 500

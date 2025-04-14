@@ -35,8 +35,5 @@ class ProductService:
     @staticmethod
     def insert_product(name: str, category: str, barcode: str, price: float):
 
-        if float(price) <= 0:
-            raise ValueError("Price must be over 0.00.")
-
         product = ProductRepository.insert_product(name, category, barcode, price)
         return product.to_dict()
