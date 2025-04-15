@@ -36,8 +36,12 @@ class ProductRepository:
     
     @staticmethod
     def insert_product(name: str, category: str, barcode: str, price: float):
-        id = len(ProductRepository.products) + 1
-        product = Product(id, name, category, barcode, price)
-        ProductRepository.products[id] = product
+        try:
+            id = len(ProductRepository.products) + 1
+            product = Product(id, name, category, barcode, price)
+            ProductRepository.products[id] = product
 
-        return product
+            return product
+        
+        except DatabaseError:
+            raise
