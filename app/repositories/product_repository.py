@@ -52,7 +52,7 @@ class ProductRepository:
     @staticmethod
     def delete_product(id: int):
         try:
-            del ProductRepository.products[int(id)]
+            del ProductRepository.products[id]
         
         except KeyError:
             raise ProductNotFoundError(id)
