@@ -16,6 +16,7 @@ class ProductService:
         products = ProductRepository.get_products(name, category, barcode, price)
         return [product.to_dict() for product in products]
     
+
     @staticmethod
     def get_product_by_id(id: int):
 
@@ -30,10 +31,14 @@ class ProductService:
         product = ProductRepository.get_product_by_id(id)
         return product.to_dict()
         
-        
-        
+ 
     @staticmethod
     def insert_product(name: str, category: str, barcode: str, price: float):
 
         product = ProductRepository.insert_product(name, category, barcode, price)
         return product.to_dict()
+    
+
+    @staticmethod
+    def delete_product(id: int):
+        ProductRepository.delete_product(id)

@@ -48,3 +48,14 @@ class ProductRepository:
         
         except DatabaseError:
             raise
+
+    @staticmethod
+    def delete_product(id: int):
+        try:
+            del ProductRepository.products[int(id)]
+        
+        except KeyError:
+            raise ProductNotFoundError(id)
+        
+        except DatabaseError:
+            raise
