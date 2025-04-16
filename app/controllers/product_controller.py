@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from werkzeug.exceptions import BadRequest
 from app.services.product_service import ProductService
 from app.exceptions.product_exceptions import ProductNotFoundError, ValidationError, DatabaseError
 from app.validators.input_validators import validate_required_fields, validate_positive_number
@@ -46,7 +47,11 @@ def insert_product():
     required_fields = ['name', 'category', 'barcode', 'price']
 
     try:
-        data = request.get_json()
+        try:
+            data = request.get_json()
+        except BadRequest:
+            raise ValidationError("Invalid or malformed JSON in request body.")
+
         
         if not data:
             raise ValidationError("Invalid or missing JSON in request body.")
