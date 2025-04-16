@@ -73,3 +73,24 @@ def insert_product():
     
     except Exception as e:
         return jsonify(error=str(e)), 500
+
+
+@product_bp.route("/<id>", methods=["DELETE"])
+def delete_product(id: int):
+    try:
+        validate_positive_number(id, 'id', require_integer=True)
+        ProductService.delete_product(id)
+
+        return jsonify({"message": "Product deleted successfully."}), 200
+    
+    except ProductNotFoundError as e:
+        return jsonify({"error": str(e)}), 404
+    
+    except ValidationError as e:
+        return jsonify({"error": str(e)}), 400
+    
+    except DatabaseError as e:
+        return jsonify({"error": str(e)}), 500
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
