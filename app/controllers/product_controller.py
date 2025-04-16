@@ -14,12 +14,15 @@ def get_products():
         barcode = request.args.get('barcode')
         price = request.args.get('price')
 
+        if price:
+            price = validate_positive_number(price, 'price')
+            
         products = ProductService.get_products(name, category, barcode, price)
     
         return jsonify(products), 200
     
     except Exception as e:
-        return jsonify(error=str(e)), 500
+        return jsonify({"error": str(e)}), 500
 
 
 @product_bp.route("/<id>", methods=["GET"])
@@ -30,16 +33,16 @@ def get_product_by_id(id: int):
         return jsonify(product), 200
     
     except ProductNotFoundError as e:
-        return jsonify(error=str(e)), 404
+        return jsonify({"error": str(e)}), 404
     
     except ValidationError as e:
-        return jsonify(error=str(e)), 400
+        return jsonify({"error": str(e)}), 400
     
     except DatabaseError as e:
-        return jsonify(error=str(e)), 500
+        return jsonify({"error": str(e)}), 500
     
     except Exception as e:
-        return jsonify(error=str(e)), 500
+        return jsonify({"error": str(e)}), 500
     
 
 @product_bp.route("/", methods=["POST"])
@@ -72,13 +75,13 @@ def insert_product():
         return jsonify(product), 201
     
     except ValidationError as e:
-        return jsonify(error=str(e)), 400
+        return jsonify({"error": str(e)}), 400
     
     except DatabaseError as e:
-        return jsonify(error=str(e)), 400
+        return jsonify({"error": str(e)}), 400
     
     except Exception as e:
-        return jsonify(error=str(e)), 500
+        return jsonify({"error": str(e)}), 500
 
 
 @product_bp.route("/<id>", methods=["DELETE"])
