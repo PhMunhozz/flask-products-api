@@ -14,6 +14,9 @@ def get_products():
         barcode = request.args.get('barcode')
         price = request.args.get('price')
 
+        if price:
+            price = validate_positive_number(price, 'price')
+            
         products = ProductService.get_products(name, category, barcode, price)
     
         return jsonify(products), 200
