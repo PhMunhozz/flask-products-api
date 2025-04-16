@@ -22,6 +22,7 @@ class ProductRepository:
 
             return filtered_products
         except DatabaseError:
+            # Placeholder for future DB-related error handling
             raise
     
     @staticmethod
@@ -35,6 +36,7 @@ class ProductRepository:
             return product
         
         except DatabaseError:
+            # Placeholder for future DB-related error handling
             raise
     
     @staticmethod
@@ -47,6 +49,7 @@ class ProductRepository:
             return product
         
         except DatabaseError:
+            # Placeholder for future DB-related error handling
             raise
 
     @staticmethod
@@ -58,4 +61,5 @@ class ProductRepository:
             raise ProductNotFoundError(id)
         
         except DatabaseError:
+            # Placeholder for future DB-related error handling
             raise
