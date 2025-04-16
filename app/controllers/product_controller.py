@@ -54,13 +54,13 @@ def insert_product():
         # Required fields validation
         validate_required_fields(data, required_fields)
         # Price validation
-        validate_positive_number(data.get('price'), 'price')
+        price = validate_positive_number(data.get('price'), 'price')
         
         product = ProductService.insert_product(
             data.get('name'),
             data.get('category'),
             data.get('barcode'),
-            data.get('price')
+            price
         )
         
         return jsonify(product), 201
@@ -78,7 +78,7 @@ def insert_product():
 @product_bp.route("/<id>", methods=["DELETE"])
 def delete_product(id: int):
     try:
-        validate_positive_number(id, 'id', require_integer=True)
+        id = validate_positive_number(id, 'id', require_integer=True)
         ProductService.delete_product(id)
 
         return jsonify({"message": "Product deleted successfully."}), 200
