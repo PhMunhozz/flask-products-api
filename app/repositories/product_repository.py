@@ -42,7 +42,12 @@ class ProductRepository:
     @staticmethod
     def insert_product(name: str, category: str, barcode: str, price: float):
         try:
-            id = len(ProductRepository.products) + 1
+            if ProductRepository.products:
+                max_id = max(ProductRepository.products)
+            else:
+                max_id = 0
+            
+            id = max_id + 1
             product = Product(id, name, category, barcode, price)
             ProductRepository.products[id] = product
 
