@@ -25,6 +25,7 @@ def get_products():
 @product_bp.route("/<id>", methods=["GET"])
 def get_product_by_id(id: int):
     try:
+        id = validate_positive_number(id, 'id', require_integer=True)
         product = ProductService.get_product_by_id(id)
         return jsonify(product), 200
     

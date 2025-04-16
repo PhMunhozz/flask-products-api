@@ -19,15 +19,7 @@ class ProductService:
 
     @staticmethod
     def get_product_by_id(id: int):
-
-        try:
-            id = int(id)
-        except ValueError:
-            raise ValidationError("ID must be a positive integer.")
         
-        if id <= 0:
-            raise ValidationError("ID must be a positive integer.")
-
         product = ProductRepository.get_product_by_id(id)
         return product.to_dict()
         
