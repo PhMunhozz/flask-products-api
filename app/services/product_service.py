@@ -28,3 +28,9 @@ class ProductService:
     @staticmethod
     def delete_product(id: int):
         ProductRepository.delete_product(id)
+
+
+    @staticmethod
+    def update_product(id: int, name: str, category: str, barcode: str, price: float):
+        product = ProductRepository.update_product(id, name, category, barcode, price)
+        return product.to_dict()

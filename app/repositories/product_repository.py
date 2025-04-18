@@ -68,3 +68,20 @@ class ProductRepository:
         except DatabaseError:
             # Placeholder for future DB-related error handling
             raise
+    
+
+    @staticmethod
+    def update_product(id: int, name: str, category: str, barcode: str, price: float):
+        try:
+
+            if id not in ProductRepository.products:
+                raise ProductNotFoundError(id)
+            
+            updated_product = Product(id, name, category, barcode, price)
+            ProductRepository.products[id] = updated_product
+
+            return updated_product
+        
+        except DatabaseError:
+            # Placeholder for future DB-related error handling
+            raise
