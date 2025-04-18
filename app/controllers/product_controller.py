@@ -51,6 +51,10 @@ def insert_product():
     required_fields = ['name', 'category', 'barcode', 'price']
 
     try:
+
+        if not request.is_json:
+            raise ValidationError("Content-Type must be application/json.")
+        
         try:
             data = request.get_json()
         except BadRequest:
@@ -91,6 +95,54 @@ def delete_product(id: int):
         ProductService.delete_product(id)
 
         return jsonify({"message": "Product deleted successfully."}), 200
+    
+    except ProductNotFoundError as e:
+        return jsonify({"error": str(e)}), 404
+    
+    except ValidationError as e:
+        return jsonify({"error": str(e)}), 400
+    
+    except DatabaseError as e:
+        return jsonify({"error": str(e)}), 500
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+
+@product_bp.route("/<id>", methods=["PUT"])
+def update_product(id: int):
+
+    required_fields = ['name', 'category', 'barcode', 'price']
+
+    try:
+        id = validate_positive_number(id, 'id', require_integer=True)
+
+        if not request.is_json:
+            raise ValidationError("Content-Type must be application/json.")
+        
+        try:
+            data = request.get_json()
+        except BadRequest:
+            raise ValidationError("Invalid or malformed JSON in request body.")
+
+
+        if not data:
+            raise ValidationError("Invalid or missing JSON in request body.")
+        
+        # Required fields validation
+        validate_required_fields(data, required_fields)
+        # Price validation
+        price = validate_positive_number(data.get('price'), 'price')
+        
+        product = ProductService.update_product(
+            id,
+            data.get('name'),
+            data.get('category'),
+            data.get('barcode'),
+            price
+        )
+
+        return jsonify(product), 200
     
     except ProductNotFoundError as e:
         return jsonify({"error": str(e)}), 404
