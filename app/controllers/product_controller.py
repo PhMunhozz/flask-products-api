@@ -51,6 +51,10 @@ def insert_product():
     required_fields = ['name', 'category', 'barcode', 'price']
 
     try:
+
+        if not request.is_json:
+            raise ValidationError("Content-Type must be application/json.")
+        
         try:
             data = request.get_json()
         except BadRequest:
