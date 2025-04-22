@@ -34,3 +34,9 @@ class ProductService:
     def update_product(id: int, name: str, category: str, barcode: str, price: float):
         product = ProductRepository.update_product(id, name, category, barcode, price)
         return product.to_dict()
+    
+
+    @staticmethod
+    def patch_product(id: int, data: dict):        
+        product = ProductRepository.patch_product(id, data)
+        return product.to_dict()

@@ -85,3 +85,22 @@ class ProductRepository:
         except DatabaseError:
             # Placeholder for future DB-related error handling
             raise
+
+
+    @staticmethod
+    def patch_product(id: int, data: dict):
+        try:
+
+            if id not in ProductRepository.products:
+                raise ProductNotFoundError(id)
+            
+            product = ProductRepository.products[id]
+
+            for key, value in data.items():
+                setattr(product, key, value)
+
+            return product
+        
+        except DatabaseError:
+            # Placeholder for future DB-related error handling
+            raise
