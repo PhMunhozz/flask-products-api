@@ -1,11 +1,23 @@
 from app.exceptions.product_exceptions import ValidationError
 
-def validate_required_fields(data: dict, required_fields: list) -> None:
-    for field_name in required_fields:
-        if not data.get(field_name):
+def validate_required_fields(data: dict, required_fields: list, *, partial: bool = False) -> None:
+    allowed = set(required_fields)
+    for field_name in allowed:
+        # all fields validation
+        if not partial and not data.get(field_name):
             raise ValidationError(f"{field_name.upper()} is required and cannot be empty.")
         
-def validate_positive_number(value: float, field_name: str, require_integer: bool = False) -> int:
+        # partial fields validation (validates given fields, but does not require all fields)
+        if field_name in data and data[field_name] in (None, "", [], {}):
+            raise ValidationError(f"{field_name.upper()} cannot be empty or null.")
+
+def validate_possible_fields(data: dict, possible_fields: list) -> None:
+    allowed = set(possible_fields)
+    for key in data:
+        if key not in allowed:
+            raise ValidationError(f"{key.upper()} is not a valid possible field.")
+        
+def validate_positive_number(value: float, field_name: str, *, require_integer: bool = False) -> int:
     try:
         number = float(value)
 
